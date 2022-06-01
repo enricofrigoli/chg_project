@@ -87,3 +87,21 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T PrintReads \
 --emit_original_quals
 ```
 
+```bash
+java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
+-T BaseRecalibrator -R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
+-I Control.sorted.dedup.realigned.bam \
+-knownSites ~/Documents/HumanGenomics/Annotations/hapmap_3.3.b37.vcf \
+-BQSR recal.Control.table -o after_recal.Control.table -L ../Captured_Regions.bed
+```
+
+```bash
+java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
+-T AnalyzeCovariates -R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
+-before recal.Control.table -after after_recal.Control.table \
+-csv recal.Control.csv -plots recal.Control.pdf
+```
+
+```bash
+samtools view Control.sorted.dedup.realigned.recal.bam | grep OQ | wc -l
+```
