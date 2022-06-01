@@ -26,4 +26,10 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -o Control.sorted.dedup.realigned.bam -L ../Captured_Regions.bed
 ```
 
+To count ...? run:
+
+```bash
+samtools view Control.sorted.dedup.realigned.bam | grep OC | wc -l
+```
+
 The same was done for the the Tumor.bam file.
