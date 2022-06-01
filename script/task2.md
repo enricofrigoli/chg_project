@@ -1,3 +1,5 @@
+## Deduplication
+
 First, we remove duplicates using Picard.
 
 ```bash
@@ -19,6 +21,8 @@ samtools index Tumor.sorted.dedup.bam
 
 ```
 
+
+## Realignment
 
 Then, we run RealignerTargetCreator and then IndelRealigner.
 
@@ -47,7 +51,7 @@ The same was done for the the Tumor.bam file:
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -T RealignerTargetCreator -R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
- -I Tumor.sorted.dedup.bam -o realigner.Tumor.intervals -L ../Captured_Regions.bed
+-I Tumor.sorted.dedup.bam -o realigner.Tumor.intervals -L ../Captured_Regions.bed
 ```
 
 
@@ -62,5 +66,24 @@ To count ...? run:
 
 ```bash
 samtools view Tumor.sorted.dedup.realigned.bam | grep OC | wc -l
+```
+
+## Recalibration
+
+Firstly, we run:
+
+```bash
+java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T BaseRecalibrator \
+-R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta -I Control.sorted.dedup.realigned.bam \
+-knownSites ~/Documents/HumanGenomics/Annotations/hapmap_3.3.b37.vcf \
+-o recal.Control.table -L ../Captured_Regions.bed
+```
+
+```bash
+java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T PrintReads \
+-R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
+-I Control.sorted.dedup.realigned.bam -BQSR recal.Control.table \
+-o Control.sorted.dedup.realigned.recal.bam -L ../Captured_Regions.bed \
+--emit_original_quals
 ```
 
