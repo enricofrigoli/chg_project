@@ -1,8 +1,8 @@
 # Task 1
 
-The statistics about reads can be retrieved using samtools flagstat [filename].
+The statistics about reads can be retrieved using samtools stats.
 
 ```bash
-samtools flagstat Control.bam
-samtools flagstat Tumor.bam
+samtools stats Control.bam > stats_control.txt
+samtools stats Tumor.bam > stats_tumor.txt
 ```
