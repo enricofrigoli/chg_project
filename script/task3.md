@@ -21,8 +21,14 @@ vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
 --vcf Control.UniGen.vcf --out Control.UniGen --recode --recode-INFO-all
 ```
 
-To find which identified SNPs are in the list clinvar_Pathogenic.vcf run:
 
-```bash
 
-```
+# SNPs annotation
+
+Annotation is performed with snpEff tool using the `clinvar_Pathogenic.vcf` file.
+
+
+
+
+
+
