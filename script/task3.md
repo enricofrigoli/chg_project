@@ -6,7 +6,7 @@ Task 3 is about heterozygous germline SNPs calling. To do this, we have three op
 * Use `UnifiedGenotyper` from GATK
 * Use `HaplotypeCaller` from GATK
 
-It has been required to use GATK, so let's start with UnifiedGenotyper:
+It has been requested to use GATK, so let's start with UnifiedGenotyper:
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T UnifiedGenotyper \
