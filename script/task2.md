@@ -147,3 +147,18 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 samtools view Tumor.sorted.dedup.realigned.recal.bam | grep OQ | wc -l
 ```
 
+
+
+### temporary notes
+
+In the GATK docker container I did:
+
+```bash
+gatk MarkDuplicates -I Control.sorted.bam -O Control.dedup.bam -ASSUME_SORT_ORDER coordinate \
+-REMOVE_DUPLICATES true -M Control_dedup_metrics.txt
+```
+
+and the same for tumor
+
+
+
