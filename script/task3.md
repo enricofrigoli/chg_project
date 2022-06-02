@@ -14,7 +14,7 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T UnifiedGenotyp
 -o Control.UniGen.vcf -L ../Captured_Regions.bed
 ```
 
-Then we filter (???)
+Then we need to filter the variants:
 
 ```bash
 vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
