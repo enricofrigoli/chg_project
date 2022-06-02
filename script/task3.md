@@ -24,5 +24,5 @@ vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
 To find which identified SNPs are in the list clinvar_Pathogenic.vcf run:
 
 ```bash
-vcftools --vcf Control.UniGen.vcf --diff ~/Documents/HumanGenomics/Annotations/clinvar_Pathogenic.vcf --diff-site
+
 ```

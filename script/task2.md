@@ -158,7 +158,11 @@ gatk MarkDuplicates -I Control.sorted.bam -O Control.dedup.bam -ASSUME_SORT_ORDE
 -REMOVE_DUPLICATES true -M Control_dedup_metrics.txt
 ```
 
-and the same for tumor
+and then.
+
+```bash
+gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.dedup.bam -O variants_HC.vcf -L Captured_Regions.bed
+```
 
 
 
