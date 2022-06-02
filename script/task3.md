@@ -20,3 +20,9 @@ Then we need to filter the variants:
 vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
 --vcf Control.UniGen.vcf --out Control.UniGen --recode --recode-INFO-all
 ```
+
+To find which identified SNPs are in the list clinvar_Pathogenic.vcf run:
+
+```bash
+vcftools --vcf Control.UniGen.vcf --diff ~/Documents/HumanGenomics/Annotations/clinvar_Pathogenic.vcf --diff-site
+```
