@@ -64,19 +64,36 @@ gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.r
 -O variants_HC.vcf -L ../Captured_Regions.bed
 ```
 
-Following the GATK recommendation, the variant callset is refined using CNNScoreVariants, that annotates the VCF with scores from a CNN using a 2D model with pre-trained architecture. 
+Following the GATK recommendation, the variant callset is refined using CNNScoreVariants, that annotates the VCF with scores from a CNN using a 2D model with pre-trained architecture. This tool annotates each variant with a score indicating the model's prediction of the quality of each variant.
 
 ```bash
 gatk CNNScoreVariants -I ../task2/Control.recal.bam -V variants_HC.vcf \
 -R ../Annotations/human_g1k_v37.fasta -O annotated.vcf -tensor-type read_tensor
 ```
 
-The callset is further refined using FilterVariantTranches, that uses the scores computed in the previous step and the provided hapmap known variants to further refine the callset.
+Since we are interested only in SNPs and not indels, let's remove them with SelectVariants.
 
 ```bash
-gatk FilterVariantTranches -V annotated.vcf --resource ../Annotations/hapmap_3.3.b37.vcf \
+gatk SelectVariants -R ../Annotations/human_g1k_v37.fasta -V annotated.vcf \
+--select-type-to-include SNP -O annotated_snp.vcf
+```
+
+The callset is further refined using FilterVariantTranches, that filter SNP calls using the scores computed in the previous step and the provided hapmap known variants to further refine the callset. Default SNP sensitivity is set at 99.95
+
+```bash
+gatk FilterVariantTranches -V annotated_snp.vcf --resource ../Annotations/hapmap_3.3.b37.vcf \
  --info-key CNN_2D -O filtered.vcf
 ```
+
+Let's compute the number of heterozygous SNPs found by GATK.
+
+```bash
+gatk VariantsToTable -V filtered.vcf -F TYPE -F HET -O heterozygous.table
+cat heterozygous.table | sort | uniq -c | head -n 2
+```
+
+There are 6476 heterozygous SNPs and 2789 homozygous ones.
+
 
 ## Variant Annotation
 
@@ -86,6 +103,9 @@ Variant annotation was perfomed with VariantAnnotator from GATK, using clinvar_P
 gatk VariantAnnotator -R ../Annotations/human_g1k_v37.fasta -V variants_HC.vcf \
 -O annotated_var_VA.vcf --resource ../Annotations/clinvar_Pathogenic.vcf
 ```
+
+Now we have the analysis-ready set of variants.
+
 
 We then filtered for the identified SNPs that are in the clinvar_Pathogenic.vcf using  snpEff
 
