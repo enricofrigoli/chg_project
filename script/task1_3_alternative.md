@@ -60,23 +60,54 @@ gatk AnalyzeCovariates -before recal.Control.table -after after.recal.Control.ta
 To perform variant calling, we used HaplotypeCaller module from GATK.
 
 ```bash
-gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.dedup.bam \
--O variants_HC.vcf -L Captured_Regions.bed
+gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.recal.bam \
+-O variants_HC.vcf -L ../Captured_Regions.bed
 ```
+
+Following the GATK recommendation, the variant callset is refined using CNNScoreVariants, that annotates the VCF with scores from a CNN using a 2D model with pre-trained architecture. This tool annotates each variant with a score indicating the model's prediction of the quality of each variant.
+
+```bash
+gatk CNNScoreVariants -I ../task2/Control.recal.bam -V variants_HC.vcf \
+-R ../Annotations/human_g1k_v37.fasta -O annotated.vcf -tensor-type read_tensor
+```
+
+Since we are interested only in SNPs and not indels, let's remove them with SelectVariants.
+
+```bash
+gatk SelectVariants -R ../Annotations/human_g1k_v37.fasta -V annotated.vcf \
+--select-type-to-include SNP -O annotated_snp.vcf
+```
+
+The callset is further refined using FilterVariantTranches, that filter SNP calls using the scores computed in the previous step and the provided hapmap known variants to further refine the callset. Default SNP sensitivity is set at 99.95
+
+```bash
+gatk FilterVariantTranches -V annotated_snp.vcf --resource ../Annotations/hapmap_3.3.b37.vcf \
+ --info-key CNN_2D -O filtered.vcf
+```
+
+Let's compute the number of heterozygous SNPs found by GATK.
+
+```bash
+gatk VariantsToTable -V filtered.vcf -F TYPE -F HET -O heterozygous.table
+cat heterozygous.table | sort | uniq -c | head -n 2
+```
+
+There are 6476 heterozygous SNPs and 2789 homozygous ones.
+
 
 ## Variant Annotation
 
-Variant annotation was perfomed with VariantAnnotator from GATK, using clinvar_Pathogenic.vcf
+Variant annotation was perfomed with SnpSift from snpEff, using clinvar_Pathogenic.vcf
 
 ```bash
-gatk VariantAnnotator -R ../Annotations/human_g1k_v37.fasta -V variants_HC.vcf \
--O annotated_var_VA.vcf --resource ../Annotations/clinvar_Pathogenic.vcf
+sudo java -jar ~/snpEff/SnpSift.jar Annotate Annotations/clinvar_Pathogenic.vcf filtered.vcf > annotated_clinvar_snpsift.vcf
 ```
 
-We then filtered for the identified SNPs that are in the clinvar_Pathogenic.vcf using  snpEff
+Using the same tool we can find the variants that has a clinical significance retrieved from clinvar_Pathogenic.vcf 
 
 ```bash
-cat annotated_var_VA.vcf | java -jar ~/snpEff/SnpSift.jar filter "(exists CLNSIG)"
+cat annotated_clinvar_snpsift.vcf | java -jar ~/snpEff/SnpSift.jar filter "(exists CLNSIG)"
 ```
 
+As we can see, there is a SNP in the gene BRCA1 that is associated with hereditary breast and ovarian cancer syndrome.
 
