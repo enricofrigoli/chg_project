@@ -19,7 +19,7 @@ Same for the tumor sample:
 ```bash
 java -jar ../Tools/GenomeAnalysisTK.jar -T ASEReadCounter \
 -R human_g1k_v37.fasta \
--o control.hap.csv \
+-o tumor.hap.csv \
 -I Tumor.sorted.dedup.realigned.recal.bam \
 -sites hapmap_3.3.b37.vcf  \
 -U ALLOW_N_CIGAR_READS \

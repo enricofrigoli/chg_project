@@ -4,7 +4,7 @@ _GATK ASEReadCounter_ calculates read counts per allele for allele-specific expr
 Only biallelic heterozygous SNPs are considered, so it is quicker to extract them before with:
 
 ```bash
-grep -E "(^#|0/1)" CONTROL_VARIANTS.vcf > control.het.vcf
+grep -E "(^#|0/1)" Control.UniGen.vcf > control.het.vcf
 ```
 
 ASEReadCounter was run with the following setup:
@@ -14,7 +14,7 @@ java -jar ../Tools/GenomeAnalysisTK.jar -T ASEReadCounter \
 -R human_g1k_v37.fasta \
 -o control.csv \
 -I Control.sorted.dedup.realigned.recal.bam \
--sites CONTROL_VARIANTS.het.vcf  \
+-sites control.het.vcf  \
 -U ALLOW_N_CIGAR_READS \
 -minDepth 20 \
 --minMappingQuality 20 \
@@ -34,7 +34,7 @@ java -jar ../Tools/GenomeAnalysisTK.jar -T ASEReadCounter \
 -R human_g1k_v37.fasta \
 -o tumor.csv \
 -I Tumor.sorted.dedup.realigned.recal.bam \
--sites CONTROL_VARIANTS.het.vcf  \
+-sites control.het.vcf  \
 -U ALLOW_N_CIGAR_READS \
 -minDepth 20 \
 --minMappingQuality 20 \
