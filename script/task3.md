@@ -14,21 +14,32 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T UnifiedGenotyp
 -o Control.UniGen.vcf -L ../Captured_Regions.bed
 ```
 
-Then we need to filter the variants:
+Then we need to filter the variants to keep only SNPs and remove indels:
 
 ```bash
 vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
 --vcf Control.UniGen.vcf --out Control.UniGen --recode --recode-INFO-all
 ```
 
-
-
 # SNPs annotation
 
-Annotation is performed with snpEff tool using the `clinvar_Pathogenic.vcf` file.
+To further annotate the called variants, we use the tool SnpSift. In this way, we add annotation taken from the hapmap_3.3.b37.vcf file, and from clinvar_Pathogenic.vcf file. 
 
+```bash
+java -Xmx4g -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
+Annotate ~/Documents/HumanGenomics/Annotations/hapmap_3.3.b37.vcf \
+Control.UniGen.recode.vcf > Control.UniGen.recode.ann_hapmap.vcf
+```
 
+```bash
+java -Xmx4g -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
+Annotate ~/Documents/HumanGenomics/Annotations/clinvar_Pathogenic.vcf \
+Control.UniGen.recode.ann_hapmap.vcf > Control.UniGen.recode.ann_clinv.vcf
+```
 
+Finally, let's count how many SNPs of our callset are in clinvar dataset
 
-
+```bash
+cat Control.UniGen.recode.ann_clinv.vcf ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar filter ("exists CLNSIG")
+```
 
