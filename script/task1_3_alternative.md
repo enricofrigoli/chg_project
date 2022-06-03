@@ -60,8 +60,15 @@ gatk AnalyzeCovariates -before recal.Control.table -after after.recal.Control.ta
 To perform variant calling, we used HaplotypeCaller module from GATK.
 
 ```bash
-gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.dedup.bam \
--O variants_HC.vcf -L Captured_Regions.bed
+gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.recal.bam \
+-O variants_HC.vcf -L ../Captured_Regions.bed
+```
+
+Following the GATK recommendation, the variant callset is refined using CNNScoreVariants, that annotates the VCF with scores from a CNN using a 2D model with pre-trained architecture. 
+
+```bash
+gatk CNNScoreVariants -I ../task2/Control.recal.bam -V variants_HC.vcf \
+-R ../Annotations/human_g1k_v37.fasta -O annotated.vcf -tensor-type read_tensor
 ```
 
 ## Variant Annotation
