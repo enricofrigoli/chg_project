@@ -71,6 +71,13 @@ gatk CNNScoreVariants -I ../task2/Control.recal.bam -V variants_HC.vcf \
 -R ../Annotations/human_g1k_v37.fasta -O annotated.vcf -tensor-type read_tensor
 ```
 
+The callset is further refined using FilterVariantTranches, that uses the scores computed in the previous step and the provided hapmap known variants to further refine the callset.
+
+```bash
+gatk FilterVariantTranches -V annotated.vcf --resource ../Annotations/hapmap_3.3.b37.vcf \
+ --info-key CNN_2D -O filtered.vcf
+```
+
 ## Variant Annotation
 
 Variant annotation was perfomed with VariantAnnotator from GATK, using clinvar_Pathogenic.vcf
