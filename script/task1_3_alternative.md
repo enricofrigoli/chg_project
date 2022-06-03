@@ -88,11 +88,10 @@ gatk FilterVariantTranches -V annotated_snp.vcf --resource ../Annotations/hapmap
 Let's compute the number of heterozygous SNPs found by GATK.
 
 ```bash
-gatk VariantsToTable -V filtered.vcf -F TYPE -F HET -O heterozygous.table
-cat heterozygous.table | sort | uniq -c | head -n 2
+cat filtered.vcf | grep "0/1" | wc -l
 ```
 
-There are 6476 heterozygous SNPs and 2789 homozygous ones.
+6937 heterozygous SNPs were found.
 
 
 ## Variant Annotation
