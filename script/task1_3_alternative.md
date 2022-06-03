@@ -1,3 +1,5 @@
+We propose here two paraller pipelines to process the data: the one we saw in class (using UnifiedGenotyper etc.) that makes use of tools that are no longer considered "best-practice", and another one that uses the most updated tools (HaplotypeCaller etc.). The following is the description of the second pipeline. 
+
 ## Data cleaning
 
 Starting from `Control.bam`, we need to sort and index it.
