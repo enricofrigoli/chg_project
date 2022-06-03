@@ -27,17 +27,31 @@ We use BaseRecalibrator tool from GATK that builds a model of covariation based 
 An additional step involves the building of a second model and the generation of before/after plots to visualize the effects of the recalibration process.
 
 ```bash
-gatk BaseRecalibrator -I Control.sorted.dedup.bam \
--R ~/Documents/Project_2022/Annotations/human_g1k_v37.fasta \
---known-sites ~/Documents/Project_2022/Annotations/hapmap_3.3.b37.vcf \
+gatk BaseRecalibrator -I Control.dedup.bam \
+-R ../Annotations/human_g1k_v37.fasta \
+--known-sites ../Annotations/hapmap_3.3.b37.vcf \
 -O recal.Control.table -L ../Captured_Regions.bed
 ```
 
 ```bash
-gatk ApplyBQSR -R ~/Documents/Project_2022/Annotations/human_g1k_v37.fasta \
--I Control.sorted.dedup.bam --bqsr-recal-file recal.Control.table \
+gatk ApplyBQSR -R ../Annotations/human_g1k_v37.fasta \
+-I Control.dedup.bam --bqsr-recal-file recal.Control.table \
 -O Contro.recal.bam -L ../Captured_Regions.bed \
 --emit-original-quals true
+```
+
+Then, we need to perform a second step of recalibration on the recalibrated file for quality control purposes.
+
+```bash
+gatk BaseRecalibrator -R ../Annotations/human_g1k_v37.fasta -I Control.recal.bam \
+-O after.recal.Control.table -L ../Captured_Regions.bed --known-sites ../Annotations/hapmap_3.3.b37.vcf
+```
+
+Finally, AnalyzeCovariates allows to generate before/after plots.
+
+```bash
+gatk AnalyzeCovariates -before recal.Control.table -after after.recal.Control.table \
+-csv recal_Control_report.csv -plots recal_Control_plots.pdf
 ```
 
 
