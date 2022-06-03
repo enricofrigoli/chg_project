@@ -24,10 +24,10 @@ vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
 How many heterozygous SNPs have been called?
 
 ```bash
-cat Control.UniGen.recode.vcf | grep -E "(^#|0/1)" | wc -l
+cat Control.UniGen.recode.vcf | grep "0/1" | wc -l
 ```
 
-In the raw callset, 6247  have been found.
+In the raw callset, 6131  have been found.
 
 # SNPs annotation
 
