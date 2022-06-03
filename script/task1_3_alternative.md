@@ -97,20 +97,17 @@ There are 6476 heterozygous SNPs and 2789 homozygous ones.
 
 ## Variant Annotation
 
-Variant annotation was perfomed with VariantAnnotator from GATK, using clinvar_Pathogenic.vcf
+Variant annotation was perfomed with SnpSift from snpEff, using clinvar_Pathogenic.vcf
 
 ```bash
-gatk VariantAnnotator -R ../Annotations/human_g1k_v37.fasta -V variants_HC.vcf \
--O annotated_var_VA.vcf --resource ../Annotations/clinvar_Pathogenic.vcf
+sudo java -jar ~/snpEff/SnpSift.jar Annotate Annotations/clinvar_Pathogenic.vcf filtered.vcf > annotated_clinvar_snpsift.vcf
 ```
 
-Now we have the analysis-ready set of variants.
-
-
-We then filtered for the identified SNPs that are in the clinvar_Pathogenic.vcf using  snpEff
+Using the same tool we can find the variants that has a clinical significance retrieved from clinvar_Pathogenic.vcf 
 
 ```bash
-cat annotated_var_VA.vcf | java -jar ~/snpEff/SnpSift.jar filter "(exists CLNSIG)"
+cat annotated_clinvar_snpsift.vcf | java -jar ~/snpEff/SnpSift.jar filter "(exists CLNSIG)"
 ```
 
+As we can see, there is a SNP in the gene BRCA1 that is associated with hereditary breast and ovarian cancer syndrome.
 
