@@ -40,6 +40,7 @@ Control.UniGen.recode.ann_hapmap.vcf > Control.UniGen.recode.ann_clinv.vcf
 Finally, let's count how many SNPs of our callset are in clinvar dataset
 
 ```bash
-cat Control.UniGen.recode.ann_clinv.vcf ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar filter ("exists CLNSIG")
+cat Control.UniGen.recode.ann_clinv.vcf | java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
+filter "(exists CLNSIG)"
 ```
 
