@@ -21,6 +21,14 @@ vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
 --vcf Control.UniGen.vcf --out Control.UniGen --recode --recode-INFO-all
 ```
 
+How many heterozygous SNPs have been called?
+
+```bash
+cat Control.UniGen.recode.vcf | grep -E "(^#|0/1)" | wc -l
+```
+
+In the raw callset, 6247  have been found.
+
 # SNPs annotation
 
 To further annotate the called variants, we use the tool SnpSift. In this way, we add annotation taken from the hapmap_3.3.b37.vcf file, and from clinvar_Pathogenic.vcf file. 
