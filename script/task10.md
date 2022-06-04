@@ -121,7 +121,7 @@ ggplot(data=res2plot, aes(x=rownames(res2plot), y=counts)) +
   xlab(NULL)
 ```
 
-![](/Users/linda/Desktop/CHG/Project_2022/task10/../../CHG_repo_project/chg_project/script/task10_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](/Users/linda/Desktop/CHG/Project_2022/task10/../../CHG_repo_project/chg_project/script/task10_files/figure-gfm/spia1_plot-1.png)<!-- -->
 
 The results give a SPIA score of **0.18809**, marked as uncertain for
 the parameters given. Since we only considered SNPs in common between
@@ -223,7 +223,7 @@ ggplot(data=res2plot, aes(x=rownames(res2plot), y=counts)) +
   xlab(NULL)
 ```
 
-![](/Users/linda/Desktop/CHG/Project_2022/task10/../../CHG_repo_project/chg_project/script/task10_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](/Users/linda/Desktop/CHG/Project_2022/task10/../../CHG_repo_project/chg_project/script/task10_files/figure-gfm/spia_somatic_plot-1.png)<!-- -->
 
 The results give a SPIA score of **0.0044433**, classifying the samples
 as similar. In no cases both the samples show homozygous genotype, only
