@@ -42,7 +42,7 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -o Control.sorted.dedup.realigned.bam -L ../Captured_Regions.bed
 ```
 
-To count ...? run:
+To count the number of realigned reads run:
 
 ```bash
 samtools view Control.sorted.dedup.realigned.bam | grep OC | wc -l
