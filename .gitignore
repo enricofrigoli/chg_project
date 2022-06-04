@@ -1,2 +1,5 @@
 # MAC shit
 .DS_Store
+
+# Non-knitted markdowns
+*.Rmd
