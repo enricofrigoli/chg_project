@@ -44,13 +44,21 @@ Annotate ~/Documents/HumanGenomics/Annotations/hapmap_3.3.b37.vcf \
 Control.ann_kg.vcf > Control.ann_kg.hapmap.vcf
 ```
 
+
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
 Annotate ~/Documents/HumanGenomics/Annotations/clinvar_Pathogenic.vcf \
 Control.ann_kg.hapmap.vcf > Control.ann_kg.hapmap.clvar.vcf
 ```
 
-Finally, let's count how many SNPs of our callset are in clinvar dataset
+
+Which identified SNPs are in the list `clinvar_Pathogenic.vcf`?
+
+```bash 
+bedtools intersect -a Control.ann_kg.hapmap.vcf -b ~/Documents/HumanGenomics/Annotations/clinvar_Pathogenic.vcf | less
+```
+
+Which SNPs have clinical significance among the annotated ones?
 
 ```bash
 cat Control.ann_kg.hapmap.clvar.vcf | java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
