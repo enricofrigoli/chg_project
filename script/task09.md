@@ -3,8 +3,8 @@ Task 9 - Purity and Ploidy estimation
 
 *GATK ASEReadCounter* calculates read counts per allele for
 allele-specific expression analysis of RNAseq (??) data. The `.vcf` file
-is needed to specify the positions to evaluate: in this case, the
-variants identified during task 3 on the control sample. Only biallelic
+is needed to specify the positions to evaluate: in this case, the SNPs
+identified during task 3 on the control sample. Only biallelic
 heterozygous SNPs are considered, so it is quicker to extract them
 before with:
 
@@ -53,7 +53,6 @@ gatk3 ASEReadCounter \
 ``` r
 library(data.table)
 library(CLONETv2)
-library(TPES)
 library(ggplot2)
 ```
 
@@ -235,27 +234,69 @@ clonality.table <- compute_scna_clonality_table(beta_table = bt,
 b <- merge(clonality.table, allele_specific_cna_table)
 ggplot(data=b, aes(x=cnA, y=cnB, col=clonality.status))+
   geom_point(size=2)+
-  scale_color_manual(values=c("#5d16a6", "#6c757d", "#f35b04", "#9683ec", "#f7b801"))
+  scale_color_manual(values=c("#5d16a6", "#6c757d", "#f35b04", "#9683ec", "#f7b801"))+
+  ggtitle("Clonality status of SCNAs")
 ```
 
 ![](task09_files/figure-gfm/clonality-1.png)<!-- -->
 
 ## TPES
 
-``` r
-# snv.reads = fread("../08_SomaticVariantCalling/Data/somatic.pm",data.table=F)
-# snv.reads = snv.reads[which(snv.reads$somatic_status=="Somatic"),]
-# snv.reads = snv.reads[,c("chrom","position","position","tumor_reads1","tumor_reads2")]
-# colnames(snv.reads) = c("chr","start","end","ref.count","alt.count")
-# snv.reads$sample = "Sample.1"
-# 
-# TPES_purity(ID = "Sample.1", SEGfile = seg.tb,
-#             SNVsReadCountsFile = snv.reads,
-#             ploidy = pl.table,
-#             RMB = 0.47, maxAF = 0.6, minCov = 10, minAltReads = 10, minSNVs = 1)
-# 
-# TPES_report(ID = "Sample.1", SEGfile = seg.tb,
-#             SNVsReadCountsFile = snv.reads,
-#             ploidy = pl.table,
-#             RMB = 0.47, maxAF = 0.6, minCov = 10, minAltReads = 10, minSNVs = 1)
+[TPES
+documentation](https://cran.r-project.org/web/packages/TPES/TPES.pdf)
+
+Obtain the list of SNVs from Varscan (non-vcf output)
+
+``` bash
+varscan somatic Control.pileup Tumor.pileup somatic.pm
 ```
+
+``` r
+library(TPES)
+```
+
+The file with the somatic variants is loaded in R and the dataset is
+prepared for the *TPES* workflow.
+
+``` r
+snv.reads = fread("somatic.pm.snp",data.table=F)
+snv.reads = snv.reads[which(snv.reads$somatic_status=="Somatic"),]
+snv.reads = snv.reads[,c("chrom","position","position","tumor_reads1","tumor_reads2")]
+colnames(snv.reads) = c("chr","start","end","ref.count","alt.count")
+snv.reads$sample = "Sample.1"
+```
+
+The segmentation file `seg` and the ploidy table `pl.table`, created for
+*CLONET* are used for *TPES* too.
+
+The parameters are:
+
+  - `RMB`: Reference Mapping Bias
+  - `maxAF`: threshold on allelic fraction
+  - `minCov`: minimum coverage
+  - `minAltReads`: minimum coverage for alternaive reads
+  - `minSNVs`: minimum number of SNVs
+
+<!-- end list -->
+
+``` r
+TPES_purity(ID = "Sample.1", SEGfile = seg,
+            SNVsReadCountsFile = snv.reads,
+            ploidy = pl.table,
+            RMB = 0.47, maxAF = 0.55, minCov = 10, minAltReads = 10, minSNVs = 1)
+```
+
+    ##            sample purity purity.min purity.max n.segs n.SNVs  RMB BandWidth
+    ## Sample.1 Sample.1   0.94       0.94       0.94     24      1 0.47     0.019
+    ##                     log
+    ## Sample.1 computation ok
+
+``` r
+par(mar=c(4,4,3,2))
+TPES_report(ID = "Sample.1", SEGfile = seg,
+            SNVsReadCountsFile = snv.reads,
+            ploidy = pl.table,
+            RMB = 0.47, maxAF = 0.55, minCov = 10, minAltReads = 10, minSNVs = 1)
+```
+
+![](task09_files/figure-gfm/TPES-1.png)<!-- -->
