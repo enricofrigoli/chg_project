@@ -102,7 +102,14 @@ Variant annotation was perfomed with SnpSift from snpEff, using clinvar_Pathogen
 sudo java -jar ~/snpEff/SnpSift.jar Annotate Annotations/clinvar_Pathogenic.vcf filtered.vcf > annotated_clinvar_snpsift.vcf
 ```
 
-Using the same tool we can find the variants that has a clinical significance retrieved from clinvar_Pathogenic.vcf 
+How many SNPs are annotated both in our callset and in `clinvar_Pathogenic.vcf`?
+
+```bash
+bedtools intersect -a filtered_clinv_annotated.vcf \
+-b ../Annotations/clinvar_Pathogenic.vcf | wc -l  
+```
+
+Using SnpSift again we can find the variants that has a clinical significance retrieved from clinvar_Pathogenic.vcf 
 
 ```bash
 cat annotated_clinvar_snpsift.vcf | java -jar ~/snpEff/SnpSift.jar filter "(exists CLNSIG)"
