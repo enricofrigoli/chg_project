@@ -3,3 +3,7 @@
 
 # Non-knitted markdowns
 *.Rmd
+
+# R files
+*.RData
+*.Rhistory
