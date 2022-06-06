@@ -12,12 +12,18 @@ Then select for heterozygous variants.
 grep -E "(^#|0/1)" raw_callset.vcf > het_variants.vcf
 ```
 
+Let's filter using vcftools using the same filters used in task03.
+
+```bash
+vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 \
+--vcf het_variants.vcf --out het_variants --recode --recode-INFO-all
+```
 
 Since annotation was performed only on SNPs, let's annotate the new file (comprising indels) starting with `snpEff`.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/snpEff/snpEff.jar -v hg19kg \
-het_variants.vcf -s het_variants.ann_kg.html > het_variants.ann_kg.vcf
+het_variants.recode.vcf -s het_variants.ann_kg.html > het_variants.ann_kg.vcf
 ```
 
 Then use `snpSift` to annotate variants using as resources the hapmap and clinvar files.
