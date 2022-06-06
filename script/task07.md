@@ -6,18 +6,14 @@ Let's start with the import and rename of the raw callset (at the beginning of t
 cp ../task3/Control.UniGen.vcf ./raw_callset.vcf
 ```
 
-Then select for heterozygous variants with `SnpSift`.
+Then select for heterozygous variants.
 
 ```bash
 grep -E "(^#|0/1)" raw_callset.vcf > het_variants.vcf
 ```
 
-```bash
-cat raw_callset.vcf | java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
-filter "((countHet() > 0)" > het_variants.vcf
-```
 
-Since annotation was performed only on SNPs, let's annotate the new file starting with `snpEff`.
+Since annotation was performed only on SNPs, let's annotate the new file (comprising indels) starting with `snpEff`.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/snpEff/snpEff.jar -v hg19kg \
