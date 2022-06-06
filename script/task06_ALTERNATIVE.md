@@ -1,12 +1,29 @@
-Starting from the filtered callset from Mutect2 (somatic short variants), we used `VariantAnnotator` from GATK to annotate the callset with `clinvar_Pathogenic.vcf` file.
+# Somatic variant calling
+
+Somatic variant calling is perfomed with Mutect2 on analysis-ready bam files (deduplicated and recalibrated). 
+
 
 ```bash
-gatk VariantAnnotator -R ../Annotations/human_g1k_v37.fasta \
---resource ../Annotations/clinvar_Pathogenic.vcf -V filtered_mt2.vcf  \
--O filtered_ann.vcf
+gatk Mutect2 -R ../Annotations/human_g1k_v37.fasta -I ../task2/Tumor.recal.bam \
+-I ../task2/Control.recal.bam -L ../Captured_Regions.bed -O somatic_unfiltered_mt2.vcf
 ```
 
+A needed tool to filter the raw callset found by Mutect2 is `FilterMutectCalls`:
 
+```bash
+gatk FilterMutectCalls -R ../Annotations/human_g1k_v37.fasta -V somatic_unfiltered_mt2.vcf -O filtered_mt2.vcf
+```
 
+Then use `SelectVariants` to select SNPs:
 
+```bash
+gatk SelectVariants -R ../Annotations/human_g1k_v37.fasta -V filtered_mt2.vcf \
+-O snps_filtered_mt2.vcf --select-type-to-include SNP
+```
+
+The total number of point mutations can be found with:
+
+```bash
+cat snps_filtered_mt2.vcf | grep -v "^#" | wc -l
+```
 
