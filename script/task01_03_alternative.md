@@ -71,6 +71,12 @@ gatk CNNScoreVariants -I ../task2/Control.recal.bam -V variants_HC.vcf \
 -R ../Annotations/human_g1k_v37.fasta -O annotated.vcf -tensor-type read_tensor
 ```
 
+A brief look at the type of variants found can be done with:
+
+```bash
+vcf-annotate --fill-type annotated.vcf | grep -oP "TYPE=\w+" | sort | uniq -c
+```
+
 Since we are interested only in SNPs and not indels, let's remove them with SelectVariants.
 
 ```bash
