@@ -51,6 +51,11 @@ Annotate ~/Documents/HumanGenomics/Annotations/clinvar_Pathogenic.vcf \
 Control.ann_kg.hapmap.vcf > Control.ann_kg.hapmap.clvar.vcf
 ```
 
+Select heterozygous ones:
+
+```bash
+cat Control.ann_kg.hapmap.clvar.vcf | grep -E "(^#|0/1)" > het_Control_ann_kg.hapmap.clvar.vcf
+```
 
 Which identified SNPs are in the list `clinvar_Pathogenic.vcf`?
 
