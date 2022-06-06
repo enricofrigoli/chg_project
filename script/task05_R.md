@@ -24,7 +24,7 @@ plot(cn$adjusted_log_ratio,pch=".",ylim=c(-2.5,2.5),
      main="Adjusted values")
 ```
 
-<img src="task05_R_files/figure-gfm/unnamed-chunk-2-1.png" width="50%" /><img src="task05_R_files/figure-gfm/unnamed-chunk-2-2.png" width="50%" />
+<img src="task05_R_files/figure-gfm/log2ratio-1.png" width="50%" /><img src="task05_R_files/figure-gfm/log2ratio-2.png" width="50%" />
 
 Create a copy number array (CNA) data object. The function `smooth.CNA`
 is needed to detect outliers and smooth the data for circular binary
@@ -49,13 +49,13 @@ segs <- segment(CNA.smoothed,
     ## Analyzing: Sample.1
 
 ``` r
-#extract the segmentatino output
+#extract the segmentation output
 segs2 = segs$output
 
 plot(segs, main="CBS, alpha=0.5", plot.type="w")
 ```
 
-![](task05_R_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](task05_R_files/figure-gfm/SCNA_plot-1.png)<!-- -->
 
 Plot with a histogram the distribution of log2\_ratios of all segments
 detected with CBS.
@@ -69,7 +69,7 @@ hist(segs2$seg.mean,
      col="green")
 ```
 
-![](task05_R_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](task05_R_files/figure-gfm/segmentation_histo-1.png)<!-- -->
 
 Write a file `SCNA.copynumber.called.seg`, useful for visualization with
 IGV.
@@ -78,22 +78,44 @@ IGV.
 write.table(segs2, file=file.path(folder,"SCNA.copynumber.called.seg"), row.names=F, col.names=T, quote=F, sep="\t")
 ```
 
------
+## SCNA segments associated with DNA repair genes
 
-??
-
-With this function it is possible to visualize segments that fall into
-specific positions on chromosomes.
+Get the positions of the DNA repair genes from the
+`DNA_Repair_Genes.bed` file.
 
 ``` r
-getSegments <- function(chr, initialPos, finalPos, segments){
+DNA_repair <- read.table("../DNA_Repair_Genes.bed")
+colnames(DNA_repair) <- c("chr", "start", "end", "gene")
+DNA_repair <- DNA_repair[which(DNA_repair$chr %in% c(15,16,17,18)),]
+DNA_repair$chr <- as.integer(DNA_repair$chr)
+```
+
+Use the function `getSegments` to associate each gene to its segment and
+get the log2R.
+
+``` r
+getSegments <- function(genename, chr, initialPos, finalPos, segments=segs2){
   #select segments that intersect initialPos and finalPs
   goodSegs <- segments[which(
     (segments[,2] == chr) & 
       ((segments[,3] >= initialPos & segments[,3] <= finalPos ) |
          (segments[,4] >= initialPos & segments[,4] <= finalPos ) |
          (segments[,3] <= initialPos & segments[,4] >= finalPos ) )),]
-  
-  return(goodSegs)  
+  return(cbind(genename, goodSegs))
 }
 ```
+
+``` r
+DNA_repair_segments <- mapply(getSegments, DNA_repair$gene, DNA_repair$chr, DNA_repair$start, DNA_repair$end)
+
+DNA_repair_log2R <- as.data.frame(t(as.data.frame(DNA_repair_segments[7,])))
+colnames(DNA_repair_log2R) <- "mean_log2R"
+DNA_repair_log2R["DNA_repair_gene"] <- rownames(DNA_repair_log2R)
+
+ggplot(data=DNA_repair_log2R, aes(x=DNA_repair_gene, y=mean_log2R))+
+  geom_bar(stat="identity", fill = "#31cb00")+
+  theme(axis.text.x = element_text(angle=45, hjust=1, vjust=1, 
+                                   colour="black"))
+```
+
+![](task05_R_files/figure-gfm/SCNA_DNARepairGenes-1.png)<!-- -->
