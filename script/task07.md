@@ -6,22 +6,24 @@ Let's start with the import and rename of the raw callset (at the beginning of t
 cp ../task3/Control.UniGen.vcf ./raw_callset.vcf
 ```
 
-Then select for heterozygous variants with `SnpSift`.
+Then select for heterozygous variants.
 
 ```bash
 grep -E "(^#|0/1)" raw_callset.vcf > het_variants.vcf
 ```
 
+Let's filter using vcftools using the same filters used in task03.
+
 ```bash
-cat raw_callset.vcf | java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
-filter "((countHet() > 0)" > het_variants.vcf
+vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 \
+--vcf het_variants.vcf --out het_variants --recode --recode-INFO-all
 ```
 
-Since annotation was performed only on SNPs, let's annotate the new file starting with `snpEff`.
+Since annotation was performed only on SNPs, let's annotate the new file (comprising indels) starting with `snpEff`.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/snpEff/snpEff.jar -v hg19kg \
-het_variants.vcf -s het_variants.ann_kg.html > het_variants.ann_kg.vcf
+het_variants.recode.vcf -s het_variants.ann_kg.html > het_variants.ann_kg.vcf
 ```
 
 Then use `snpSift` to annotate variants using as resources the hapmap and clinvar files.
@@ -48,17 +50,19 @@ filter "(exists CLNSIG)" > intersect_clinvar.vcf
 Now let's compute the overlap between germline heterozygous indels and SNPs with `DNA_Repair_Genes` using bedtools.
 
 ```bash
-bedtools intersect -a ../DNA_Repair_Genes -b intersect_clinvar.vcf
+bedtools intersect -a ../DNA_Repair_Genes.bed -b intersect_clinvar.vcf
 ```
 
 We can find the the only variant linked to a clinical significance is the one in BRCA1.
 If we instead extend the intersection at all the heterozygous variants called, we found many SNPs in DNA repair genes.
 
 ```bash
-bedtools intersect -a ../Dna_Repair_Genes -b het_variants.ann_kg.hapmap.clvar.vcf
+bedtools intersect -a ../DNA_Repair_Genes.bed -b het_variants.ann_kg.hapmap.clvar.vcf > overlap.tsv
 ```
 
-
+```bash
+cat overlap.tsv | cut -f4,4 | uniq -c 
+```
 
 
 
