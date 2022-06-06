@@ -1,12 +1,11 @@
 Task 9 - Purity and Ploidy estimation
 ================
 
-*GATK ASEReadCounter* calculates read counts per allele for
-allele-specific expression analysis of RNAseq (??) data. The `.vcf` file
+*GATK ASEReadCounter* calculates read counts per allele. The `.vcf` file
 is needed to specify the positions to evaluate: in this case, the SNPs
 identified during task 3 on the control sample. Only biallelic
-heterozygous SNPs are considered, so it is quicker to extract them
-before with:
+heterozygous SNPs are considered by the allele counter, so it is quicker
+to extract them before with in order to avoid warning messages:
 
 ``` bash
 grep -E "(^#|0/1)" Control.UniGen.vcf > ./task09/control.het.vcf
@@ -26,11 +25,14 @@ gatk3 -T ASEReadCounter \
 --minBaseQuality 20
 ```
 
-Parameters explanation: \* `-U ALLOW_N_CIGAR_READS`: allows the `N`
-string in CIGAR (it is required for RNASeq so I do not know why it is
-here, it is used in lesson 10 of the lab) \* `-MinDepth`: minimum number
-of bases that pass filters \* `--minMappingQuality`: minimum read
-mapping quality \* `--minBaseQuality`: minimum base quality
+Parameters explanation:
+
+  - `-U ALLOW_N_CIGAR_READS`: allows the `N` string in CIGAR (it is
+    required for RNASeq so I do not know why it is here, it is used in
+    lesson 10 of the lab)
+  - `-MinDepth`: minimum number of bases that pass filters
+  - `--minMappingQuality`: minimum read mapping quality
+  - `--minBaseQuality`: minimum base quality
 
 Same for the tumor sample:
 
@@ -134,7 +136,7 @@ hist(bt$beta, main = "Beta values", breaks = 100, col="light green", xlim=c(0.3,
 
   - **Ploidy** is computed considering the *LogR* of the genomic
     segments (ratio between tumor and control coverage within the
-    segment), normalized over the ration between the mean tumor and
+    segment), normalized over the ratio between the mean tumor and
     control coverage. The normalization leads to a shift in the *LogR*
     signal when the difference in coverage between tumor and control is
     due to aneuploidy (abnormal number of alleles).
@@ -300,3 +302,8 @@ TPES_report(ID = "Sample.1", SEGfile = seg,
 ```
 
 ![](task09_files/figure-gfm/TPES-1.png)<!-- -->
+
+The resulting plots represent respectively the allelic fraction
+distribution of putative clonal and subclonal SNVs within copy number
+neutral segments and how the density function varies according to
+different bandwidth values.
