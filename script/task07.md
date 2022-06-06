@@ -57,10 +57,12 @@ We can find the the only variant linked to a clinical significance is the one in
 If we instead extend the intersection at all the heterozygous variants called, we found many SNPs in DNA repair genes.
 
 ```bash
-bedtools intersect -a ../DNA_Repair_Genes.bed -b het_variants.ann_kg.hapmap.clvar.vcf
+bedtools intersect -a ../DNA_Repair_Genes.bed -b het_variants.ann_kg.hapmap.clvar.vcf > overlap.tsv
 ```
 
-
+```bash
+cat overlap.tsv | cut -f4,4 | uniq -c 
+```
 
 
 
