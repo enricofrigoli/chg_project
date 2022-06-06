@@ -2,7 +2,7 @@ Task 10 - Similarity between Control and Tumor samples
 ================
 
 Use *GATK ASEReadCounter* with the following setup, the same as task 9
-bit with different sites. In this case we consider all SNP sites stored
+but with different sites. In this case we consider all SNP sites stored
 in the hap map file (`hapmap_3.3.b37.vcf`) and not only the ones found
 with the variant calling.
 
