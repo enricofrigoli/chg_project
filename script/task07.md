@@ -50,14 +50,14 @@ filter "(exists CLNSIG)" > intersect_clinvar.vcf
 Now let's compute the overlap between germline heterozygous indels and SNPs with `DNA_Repair_Genes` using bedtools.
 
 ```bash
-bedtools intersect -a ../DNA_Repair_Genes -b intersect_clinvar.vcf
+bedtools intersect -a ../DNA_Repair_Genes.bed -b intersect_clinvar.vcf
 ```
 
 We can find the the only variant linked to a clinical significance is the one in BRCA1.
 If we instead extend the intersection at all the heterozygous variants called, we found many SNPs in DNA repair genes.
 
 ```bash
-bedtools intersect -a ../Dna_Repair_Genes -b het_variants.ann_kg.hapmap.clvar.vcf
+bedtools intersect -a ../DNA_Repair_Genes.bed -b het_variants.ann_kg.hapmap.clvar.vcf
 ```
 
 
