@@ -57,6 +57,14 @@ plot(segs, main="CBS, alpha=0.5", plot.type="w")
 
 ![](task05_R_files/figure-gfm/SCNA_plot-1.png)<!-- -->
 
+Find the number of segments compatible with heterozygous deletions:
+
+``` r
+nrow(segs2[which(segs2$seg.mean < (-0.5)),])
+```
+
+    ## [1] 114
+
 Plot with a histogram the distribution of log2\_ratios of all segments
 detected with CBS.
 
