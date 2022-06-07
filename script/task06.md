@@ -32,4 +32,5 @@ Filter the vcf for somatic point mutations:
 cat somatic.pm.ann.vcf | java -Xmx4g -jar ../../Tools/snpEff/SnpSift.jar filter "(SS = 2)"
 ```
 Non so se questo funziona perché SS è un parametro di INFO nel .vfc
+
 Alternativamente si possono contare con un grep per "SS=2"
