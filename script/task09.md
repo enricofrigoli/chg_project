@@ -104,14 +104,14 @@ bt <- compute_beta_table(seg, pileup.tumor, pileup.control, min_required_snps=3,
 ```
 
     ## Computed beta table of sample "Sample.1"
-    ##  Number of processed segments: 202
-    ##  Number of segments with valid beta: 92 (46%)
+    ##  Number of processed segments: 175
+    ##  Number of segments with valid beta: 77 (44%)
     ##  Quantiles of input segment lenghts:
-    ##   0%  :      48.0
-    ##   25% :     301.0
-    ##   50% :    8980.5
-    ##   75% : 1486722.5
-    ##   100%:28590336.0
+    ##   0%  :      48
+    ##   25% :     301
+    ##   50% :    9330
+    ##   75% : 1635036
+    ##   100%:28590336
     ##  Quantiles of input segment coverage:
     ##   0%  : 26.00000
     ##   25% : 46.97959
@@ -119,11 +119,11 @@ bt <- compute_beta_table(seg, pileup.tumor, pileup.control, min_required_snps=3,
     ##   75% : 71.29787
     ##   100%:201.00000
     ##  Quantiles of number of informative SNPs per input segment:
-    ##   0%  :  0.0
-    ##   25% :  0.0
-    ##   50% :  0.5
-    ##   75% : 26.0
-    ##   100%:314.0
+    ##   0%  :  0
+    ##   25% :  0
+    ##   50% :  0
+    ##   75% : 41
+    ##   100%:392
 
 ``` r
 # check n_beta
@@ -149,7 +149,7 @@ pl.table
 ```
 
     ##     sample ploidy
-    ## 1 Sample.1   2.24
+    ## 1 Sample.1   2.25
 
   - With the *ploidy* and *beta* tables it is possible to calculate the
     **admixture**: the percentage of non-tumor cells in a tumor sample
@@ -169,7 +169,7 @@ adm.table
 ```
 
     ##            sample  adm adm.min adm.max
-    ## Sample.1 Sample.1 0.36    0.26    0.44
+    ## Sample.1 Sample.1 0.36    0.26    0.43
 
 To visualize the results, plot *beta* against *LogR* values for each
 genomic segment. Red circels represent the expected values of
@@ -289,7 +289,7 @@ TPES_purity(ID = "Sample.1", SEGfile = seg,
 ```
 
     ##            sample purity purity.min purity.max n.segs n.SNVs  RMB BandWidth
-    ## Sample.1 Sample.1   0.94       0.94       0.94     24      1 0.47     0.019
+    ## Sample.1 Sample.1   0.94       0.94       0.94     21      1 0.47     0.019
     ##                     log
     ## Sample.1 computation ok
 

@@ -32,6 +32,8 @@ segmentation (CBS). CBS is performed by the `segment` function, that
 segments the log2ratio data in regions with equal copy number.
 
 ``` r
+set.seed(1)
+
 CNA.object <-CNA(genomdat = cn$adjusted_log_ratio, 
                  chrom = cn$chrom,
                  maploc = cn$chr_start, data.type = 'logratio')
@@ -57,14 +59,6 @@ plot(segs, main="CBS, alpha=0.5", plot.type="w")
 
 ![](task05_R_files/figure-gfm/SCNA_plot-1.png)<!-- -->
 
-Find the number of segments compatible with heterozygous deletions:
-
-``` r
-nrow(segs2[which(segs2$seg.mean < (-0.5)),])
-```
-
-    ## [1] 114
-
 Plot with a histogram the distribution of log2\_ratios of all segments
 detected with CBS.
 
@@ -79,9 +73,37 @@ hist(segs2$seg.mean,
 
 ![](task05_R_files/figure-gfm/segmentation_histo-1.png)<!-- -->
 
+Find the number of segments compatible with heterozygous deletions:
+
+``` r
+het_del_segs <- segs2[which(segs2$seg.mean < (-0.5)
+                            & segs2$seg.mean > (-1)),]
+
+# Number of segments compatible with heterozygous deletion
+nrow(het_del_segs)
+```
+
+    ## [1] 64
+
+``` r
+# Number of segments in total
+nrow(segs2)
+```
+
+    ## [1] 175
+
+Write a .bed file containing the locations of all segments compatible
+with heterozygous deletions
+
+``` r
+write.table(het_del_segs[c(2,3,4,1)], file=file.path(folder,"heterozygous.deletions.bed"), 
+            row.names=F, col.names=F, quote=F, sep="\t")
+```
+
 Write a file `SCNA.copynumber.called.seg`, useful for visualization with
 IGV.
 
 ``` r
-write.table(segs2, file=file.path(folder,"SCNA.copynumber.called.seg"), row.names=F, col.names=T, quote=F, sep="\t")
+write.table(segs2, file=file.path(folder,"SCNA.copynumber.called.seg"), 
+            row.names=F, col.names=T, quote=F, sep="\t")
 ```
