@@ -77,13 +77,13 @@ Find the number of segments compatible with heterozygous deletions:
 
 ``` r
 het_del_segs <- segs2[which(segs2$seg.mean < (-0.5)
-                            & segs2$seg.mean > (-1)),]
+                            & segs2$seg.mean > (-1.5)),]
 
 # Number of segments compatible with heterozygous deletion
 nrow(het_del_segs)
 ```
 
-    ## [1] 64
+    ## [1] 101
 
 ``` r
 # Number of segments in total
