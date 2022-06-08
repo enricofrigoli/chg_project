@@ -29,9 +29,16 @@ java -jar ~/snpEff/snpEff.jar -v hg19 tmp/snp_filtered_mt2_0806.vcf \
 -s report_snpEff.html > ann_somatic_snps.vcf
 ```
 
+Non-SNPs variant can be found with the following command:
+
+```bash
+gatk SelectVariants -R ../Annotations/human_g1k_v37.fasta -V somatic_filtered_0806.vcf \
+-O non_snp_filtered.vcf --select-type-to-exclude SNP
+```
+
 The total number of point mutations can be found with:
 
 ```bash
-cat snps_filtered_mt2.vcf | grep -v "^#" | wc -l
+cat [filename.vcf] | grep -v "^#" | wc -l
 ```
 
