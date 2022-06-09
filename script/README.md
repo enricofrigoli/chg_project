@@ -10,3 +10,5 @@ As mentioned in the report, two setups were used:
 Both setups share custom R scripts, the provided raw BAM files, few files containing the reference genome, the .bed files containing the captured regions and the .vcf files for variant annotation. When the second setup was used, the name of the markdown with the commands contains "ALTERNATIVE".
 
 Since R was used in several tasks along with bash scripts, the markdowns and corresponding generated figures are present along with the part in bash script.
+
+Note: this code is not meant to be used for further studies, it is stricly related to the analysis performed and its corresponding report.
