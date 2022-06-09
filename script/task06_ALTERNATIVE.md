@@ -1,4 +1,4 @@
-# Somatic variant calling
+# Somatic variant calling (setup 2)
 
 Somatic variant calling is perfomed with Mutect2 on analysis-ready bam files (deduplicated and recalibrated). 
 

@@ -1,4 +1,4 @@
-## Which DNA repair genes (use file DNA_Repair_Genes.bed) overlap both heterozygous deletions and heterozygous SNPs of the patient that are in Clinvar?
+## Which DNA repair genes (use file `DNA_Repair_Genes.bed`) overlap both heterozygous deletions and heterozygous SNPs of the patient that are in Clinvar? [not used for the report]
 
 Let's start with the import and rename of the raw callset (at the beginning of task03 we selected only SNPs, removing indels).
 

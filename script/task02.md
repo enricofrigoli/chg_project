@@ -1,10 +1,15 @@
 ## Deduplication
 
-First, we remove duplicates using Picard.
+Deduplication allows to remove technical duplicates among the pool of raw aligned reads. First we sort and indec the BAMs.
 
 ```bash
 samtools sort Control.bam > Control.sorted.bam
 samtools index Control.sorted.bam
+```
+
+Then, we remove duplicates using `MarkDuplicates` from Picard, specifying the input BAM, the desired name of the output, the option to remove duplicated instead of just marking them, the folder used as *temp*, the request for a file containing metrics, and the sorted status as true.
+
+```bash
 java -jar ~/Documents/HumanGenomics/Tools/picard.jar MarkDuplicates \
 I=Control.sorted.bam O=Control.sorted.dedup.bam REMOVE_DUPLICATES=true \
 TMP_DIR=/tmp METRICS_FILE=Control.picard.log ASSUME_SORTED=true
@@ -25,15 +30,15 @@ samtools index Tumor.sorted.dedup.bam
 
 ## Realignment
 
-To perform the realignment, we run RealignerTargetCreator and then IndelRealigner, specifying
-the regions we want to target with `Captured_Regions.bed`.
+Realignment is required for variant calling using `UnifiedGenotyper`.
+To perform the realignment, we run `RealignerTargetCreator` and then `IndelRealigner`, specifying
+the regions we want to target with `Captured_Regions.bed` and the reference genome.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -T RealignerTargetCreator -R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
 -I Control.sorted.dedup.bam -o realigner.intervals -L ../Captured_Regions.bed
 ```
-
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
@@ -48,6 +53,8 @@ To count the number of realigned reads run:
 samtools view Control.sorted.dedup.realigned.bam | grep OC | wc -l
 ```
 
+where "OC" stands for *Original CIGAR*.
+
 The same was done for the the Tumor.bam file:
 
 ```bash
@@ -56,7 +63,6 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -I Tumor.sorted.dedup.bam -o realigner.Tumor.intervals -L ../Captured_Regions.bed
 ```
 
-
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -T IndelRealigner -R ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
@@ -64,15 +70,14 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -o Tumor.sorted.dedup.realigned.bam -L ../Captured_Regions.bed
 ```
 
-To count ...? run:
-
 ```bash
 samtools view Tumor.sorted.dedup.realigned.bam | grep OC | wc -l
 ```
 
+
 ## Recalibration
 
-Firstly, we run:
+Recalibration is instead required for all variant calling tools, that must use analysis-ready reads. Here (setup 1), it was perfomed using `BaseRecalibrator` that makes a recalibration table, which is then used by `PrintReads` to actually recalibrate the reads. Another round of recalibration is performed on the recalibrated file as a quality control.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T BaseRecalibrator \
@@ -97,7 +102,7 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -BQSR recal.Control.table -o after_recal.Control.table -L ../Captured_Regions.bed
 ```
 
-We use AnalyzeCovariates to perform a before/after comparison and get the differences in a .cvs and in a .pdf file.
+The recalibration tables retrieved from the first and the recond round of recalibration were used to compute recalibration plots with `AnalyzeCovariates`.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
@@ -105,6 +110,8 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 -before recal.Control.table -after after_recal.Control.table \
 -csv recal.Control.csv -plots recal.Control.pdf
 ```
+
+The number of recalibrated reads can be computed grepping "OQ" that stands for *Original Quality*, that was emitted for every recalibrated reads using the argument `--emit_original_quals` in the previous command.
 
 ```bash
 samtools view Control.sorted.dedup.realigned.recal.bam | grep OQ | wc -l
@@ -147,18 +154,6 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar \
 samtools view Tumor.sorted.dedup.realigned.recal.bam | grep OQ | wc -l
 ```
 
-
-
-### temporary notes
-
-In the GATK docker container I did:
-
-```bash
-gatk MarkDuplicates -I Control.sorted.bam -O Control.dedup.bam -ASSUME_SORT_ORDER coordinate \
--REMOVE_DUPLICATES true -M Control_dedup_metrics.txt
-```
-
-and then.
 
 ```bash
 gatk HaplotypeCaller -R ../Annotations/human_g1k_v37.fasta -I ../task2/Control.dedup.bam -O variants_HC.vcf -L Captured_Regions.bed

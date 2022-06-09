@@ -1,12 +1,6 @@
-# SNPs calling
+# Germline SNPs calling
 
-Task 3 is about heterozygous germline SNPs calling. To do this, we have three options:
-
-* Use `bcftools`
-* Use `UnifiedGenotyper` from GATK
-* Use `HaplotypeCaller` from GATK
-
-It has been requested to use GATK, so let's start with UnifiedGenotyper:
+To perform germline SNPs calling with the setup 1, `UnifiedGenotyper` was used.
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T UnifiedGenotyper \
@@ -14,7 +8,7 @@ java -jar ~/Documents/HumanGenomics/Tools/GenomeAnalysisTK.jar -T UnifiedGenotyp
 -o Control.UniGen.vcf -L ../Captured_Regions.bed
 ```
 
-Then we need to filter the variants to keep only SNPs and remove indels:
+Then, variants were filtered to keep only SNPs and remove indels:
 
 ```bash
 vcftools --minQ 20 --max-meanDP 200 --min-meanDP 5 --remove-indels \
@@ -27,7 +21,6 @@ How many heterozygous SNPs have been called?
 cat Control.UniGen.recode.vcf | grep "0/1" | wc -l
 ```
 
-In the raw callset, 6131  have been found.
 
 # SNPs annotation
 
@@ -43,7 +36,6 @@ java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \
 Annotate ~/Documents/HumanGenomics/Annotations/hapmap_3.3.b37.vcf \
 Control.ann_kg.vcf > Control.ann_kg.hapmap.vcf
 ```
-
 
 ```bash
 java -jar ~/Documents/HumanGenomics/Tools/snpEff/SnpSift.jar \

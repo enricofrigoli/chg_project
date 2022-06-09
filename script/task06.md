@@ -1,6 +1,6 @@
 # Somatic point mutations calling
 
-To call somatic point mutations, we use VarScan.
+To call somatic point mutations with the setup 1, we used VarScan.
 
 ```bash
 samtools mpileup -q 1 -f ~/Documents/HumanGenomics/Annotations/human_g1k_v37.fasta \
