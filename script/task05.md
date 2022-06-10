@@ -16,8 +16,4 @@ java -jar ~/Documents/HumanGenomics/Tools/VarScan.v2.3.9.jar copyCaller SCNA.cop
 --output-file SCNA.copynumber.called
 ```
 
-And then let's move to R.
-
-```bash
-Rscript CBS.R
-```
+The analysis continues on the R markdown file `task05_R.md`

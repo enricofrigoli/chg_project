@@ -3,9 +3,11 @@ Task 9 - Purity and Ploidy estimation
 
 *GATK ASEReadCounter* calculates read counts per allele. The `.vcf` file
 is needed to specify the positions to evaluate: in this case, the SNPs
-identified during task 3 on the control sample. Only biallelic
-heterozygous SNPs are considered by the allele counter, so it is quicker
-to extract them before with in order to avoid warning messages:
+identified as described in `task03.md` on the control sample.
+
+Only biallelic heterozygous SNPs are considered by the allele counter,
+so it is quicker to extract them before with in order to avoid warning
+messages:
 
 ``` bash
 grep -E "(^#|0/1)" Control.UniGen.vcf > ./task09/control.het.vcf
@@ -132,7 +134,7 @@ hist(bt$n_beta, main = "Beta value of normal sample: expected 1", breaks = 100, 
 hist(bt$beta, main = "Beta values", breaks = 100, col="light green", xlim=c(0.3,1))
 ```
 
-<img src="task09_files/figure-gfm/beta-1.png" width="50%" /><img src="task09_files/figure-gfm/beta-2.png" width="50%" />
+<img src="task09_R_files/figure-gfm/beta-1.png" width="50%" /><img src="task09_R_files/figure-gfm/beta-2.png" width="50%" />
 
   - **Ploidy** is computed considering the *LogR* of the genomic
     segments (ratio between tumor and control coverage within the
@@ -195,7 +197,7 @@ check.plot <- check_ploidy_and_admixture(beta_table = bt,
 print(check.plot)
 ```
 
-![](task09_files/figure-gfm/check_plot-1.png)<!-- -->
+![](task09_R_files/figure-gfm/check_plot-1.png)<!-- -->
 
   - **Allele-specific copy-number pairs** are computed from purity
     (1-admixture) and ploidy values. Basically, the results of the
@@ -219,7 +221,7 @@ ggplot(data=a, aes(x=cnA, y=cnB, col=`(cnA,cnB)`))+
   ggtitle("Allele-specific copy number")
 ```
 
-![](task09_files/figure-gfm/cn-1.png)<!-- -->
+![](task09_R_files/figure-gfm/cn-1.png)<!-- -->
 
   - **Clonality** of somatic copy-number aberrations is computed
     considering *admixture* level, distribution of *LogR* values and
@@ -240,7 +242,7 @@ ggplot(data=b, aes(x=cnA, y=cnB, col=clonality.status))+
   ggtitle("Clonality status of SCNAs")
 ```
 
-![](task09_files/figure-gfm/clonality-1.png)<!-- -->
+![](task09_R_files/figure-gfm/clonality-1.png)<!-- -->
 
 ## TPES
 
@@ -301,7 +303,7 @@ TPES_report(ID = "Sample.1", SEGfile = seg,
             RMB = 0.47, maxAF = 0.55, minCov = 10, minAltReads = 10, minSNVs = 1)
 ```
 
-![](task09_files/figure-gfm/TPES-1.png)<!-- -->
+![](task09_R_files/figure-gfm/TPES-1.png)<!-- -->
 
 The resulting plots represent respectively the allelic fraction
 distribution of putative clonal and subclonal SNVs within copy number

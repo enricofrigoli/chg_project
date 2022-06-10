@@ -121,7 +121,7 @@ ggplot(data=res2plot, aes(x=rownames(res2plot), y=counts)) +
   xlab(NULL)
 ```
 
-![](task10_files/figure-gfm/spia1_plot-1.png)<!-- -->
+![](task10_R_files/figure-gfm/spia1_plot-1.png)<!-- -->
 
 The results give a SPIA score of **0.18809**, marked as uncertain for
 the parameters given. Since we only considered SNPs in common between

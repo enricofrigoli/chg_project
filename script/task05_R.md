@@ -1,4 +1,4 @@
-Task 5 - Somatic copy number
+Task 5 - Somatic Copy Number Variant Calling (part 2)
 ================
 
 ``` r
@@ -8,7 +8,8 @@ library(ggplot2)
 
 The following R code generates some useful plots of the log2ratio values
 (raw and adjusted). The input file is the `SCNA.copynumber.called` file
-generated with *VarScan*.
+generated with *VarScan* with the procedure illustrated in the
+`task05.md` markdown file.
 
 ``` r
 folder = "/Users/linda/Desktop/CHG/Project_2022/task05"
@@ -92,7 +93,7 @@ nrow(segs2)
 
     ## [1] 175
 
-Write a .bed file containing the locations of all segments compatible
+Write a `.bed` file containing the locations of all segments compatible
 with heterozygous deletions
 
 ``` r
